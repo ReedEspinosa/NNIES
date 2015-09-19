@@ -11,13 +11,13 @@ class GameBoard(object):
         self.initial_size = initial_size
 
         # create initial board
-        self.initial_Board = np.ones((self.initial_size, self.initial_size))
+        self.board = np.ones((self.initial_size, self.initial_size))
 
     # creates a random setup for board initially
-    def create_board(self, weight):
+    def create_board(self, weight=1):
         r_matrix = np.random.rand(self.initial_size, self.initial_size)
         r_matrix_weighted = weight * r_matrix
-        self.board = self.initial_Board + r_matrix_weighted
+        self.board = self.board + r_matrix_weighted
 
     # this evolves a single input with a sigmoid.  scale input defaults to 1
     def sigmoid(self, x, scale=1):
@@ -50,3 +50,23 @@ class GameBoard(object):
         all_direction = [target_item, west, northwest, north, northeast,
                          east, southeast, south, southwest]
         return np.average(all_direction)
+
+    # each element of the original board is evolved by
+    # averaging the element with the 8 surround elements
+    # and applying the above sigmoid to it to smooth and
+    # group numbers
+    #
+    # this function evolves a general input board
+    def evolve(self, input_matrix, growth_factor=1):
+        dimension = input_matrix.shape[0]
+        blank_matrix = np.ones((dimension, dimension))
+        for i in range(dimension):
+            for j in range(dimension):
+                average = self.eight_surrounding(input_matrix, (i, j))
+                sig = self.sigmoid(average, growth_factor)
+                blank_matrix[i, j] = sig
+        return blank_matrix
+
+    # this function evolves the specific game board for this class
+    def evolve_board(self, growth_factor=1):
+        self.board = self.evolve(self.board, growth_factor)
