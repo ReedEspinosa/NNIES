@@ -14,15 +14,20 @@ class GameBoard(object):
         self.board = np.ones((self.initial_size, self.initial_size))
 
     # creates a random setup for board initially
-    def create_board(self, weight=1):
+    # scaling determines how sparse the matrix is, should be
+    # between 0 and 1.  For example, scale 0.6 means that
+    # 1 is 0.6 and rounding on average causes 1/6 of entries
+    # to become 1.
+    def create_board(self, scale=1):
         r_matrix = np.random.rand(self.initial_size, self.initial_size)
-        r_matrix_weighted = weight * r_matrix
-        self.board = self.board + r_matrix_weighted
+        r_matrix_scaled = scale * r_matrix
+        rounded_matrix = np.rint(r_matrix_scaled)
+        self.board = rounded_matrix
 
     # this evolves a single input with a sigmoid.  scale input defaults to 1
     def sigmoid(self, x, scale=1):
         num = 1 - x
-        den = np.sqrt(1 + (1 - x) ** 2)
+        den = np.sqrt(1 + (x - 1) ** 2)
         frac = num / den
         output = x + (scale * frac) + 1
         return output
