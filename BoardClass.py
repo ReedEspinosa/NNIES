@@ -25,11 +25,12 @@ class GameBoard(object):
         self.board = rounded_matrix
 
     # this evolves a single input with a sigmoid.  scale input defaults to 1
-    def sigmoid(self, x, scale=1):
+    def sigmoid(self, x_prime, scale1=1, scale2=1):
+        x = x_prime / scale1
         num = 1 - x
         den = np.sqrt(1 + (x - 1) ** 2)
         frac = num / den
-        output = x + (scale * frac) + 1
+        output = x + (scale2 * frac) + 1
         return output
 
     # this function averages the item at the target_index with the 8
