@@ -17,6 +17,12 @@ class OverallGame(object):
                             np.random.randint(0, board_size)])
                             for count in xrange(herb_number)]
 
-game = OverallGame(10, 5)
-print game.land_map.board
-print game.animal_list[0].cords
+    # returns a list of the positions of all animals
+    def animal_position(self):
+        return [self.animal_list[i].cords
+                for i in xrange(len(self.animal_list))]
+
+# game = OverallGame(10, 5)
+# print game.land_map.board
+# print game.animal_list[0].cords
+# print game.animal_position()
