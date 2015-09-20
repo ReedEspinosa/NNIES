@@ -33,10 +33,8 @@ class GameBoard(object):
         output = x + (scale2 * frac) + 1
         return output
 
-    # this function averages the item at the target_index with the 8
-    # surrounding items. assumes square matrices only, assumes one
-    # end of the board connects to other
-    def eight_surrounding(self, input_matrix, target_index):
+    # make list of eight surrounding plant life numbers
+    def eight_surrounding_list(self, input_matrix, target_index):
         dimension = input_matrix.shape[0]
         target_item = input_matrix.item(target_index)
         x = target_index[0]
@@ -55,7 +53,14 @@ class GameBoard(object):
         southwest = input_matrix.item(xp, ym)
         all_direction = [target_item, west, northwest, north, northeast,
                          east, southeast, south, southwest]
-        return np.average(all_direction)
+        return all_direction
+
+    # this function averages the item at the target_index with the 8
+    # surrounding items. assumes square matrices only, assumes one
+    # end of the board connects to other
+    def eight_surrounding(self, input_matrix, target_index):
+        l_list = self.eight_surrounding_list(input_matrix, target_index)
+        return np.average(l_list)
 
     # each element of the original board is evolved by
     # averaging the element with the 8 surround elements
