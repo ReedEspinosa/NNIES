@@ -18,3 +18,5 @@ class OverallGame(object):
                             for count in xrange(herb_number)]
 
 game = OverallGame(10, 5)
+print game.land_map.board
+print game.animal_list[0].cords
