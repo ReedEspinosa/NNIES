@@ -5,7 +5,6 @@ from animalClass import Animal
 
 # this class runs the overall game
 
-
 class OverallGame(object):
     def __init__(self, board_size, herb_number):
 
@@ -25,8 +24,10 @@ class OverallGame(object):
     # for a given animal this creates a list of surroundings
     def surrounding_list(self, herb_obj):
         position = (herb_obj.cords[0], herb_obj.cords[1])
-        land = self.land_map.board
-        return self.land_map.eight_surrounding_list(land, position)
+        return self.land_map.eight_surrounding_list(position)
+        
+    # evolve the game one turn
+#     def executeTurn(self, 
 
 # TEST:
 # game = OverallGame(10, 5)
