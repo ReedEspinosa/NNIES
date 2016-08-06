@@ -54,12 +54,6 @@ class GameBoard(object):
                          east, southeast, south, southwest]
         return all_direction
 
-    # this function averages the item at the target_index with the 8
-    # surrounding items. assumes square matrices only, assumes one
-    # end of the board connects to other
-    def nine_surrounding(self, target_index):
-        l_list = self.nine_surrounding_list(target_index)
-        return np.average(l_list)
 
     # this function evolves  the board
     # each element of the original board is evolved by
@@ -67,13 +61,19 @@ class GameBoard(object):
     # and applying the above sigmoid to it to smooth and
     # group numbers
     # larger growth_factor means less growth
-    def evolve_board(self, growth_factor=1):
+    def evolve_board(self, growth_factor=1, spread_rate=0.1):
         dimension = self.board.shape[0]
         blank_matrix = np.ones((dimension, dimension))
         for i in range(dimension):
             for j in range(dimension):
-                average = self.nine_surrounding((i, j))
+                surroundings = self.nine_surrounding_list((i, j))
+                nghbrAvg = np.average(surroundings[1:])
+                average = (surroundings[0] + spread_rate*nghbrAvg)/(1+spread_rate)
                 sig = self.sigmoid(average, growth_factor)
                 blank_matrix[i, j] = sig
         self.board = blank_matrix
         
+
+
+
+
