@@ -32,8 +32,8 @@ class GameBoard(object):
         output = x + (scale2 * frac) + 1
         return output
 
-    # make list of eight surrounding plant life numbers
-    def eight_surrounding_list(self, target_index):
+    # make list of eight surrounding and center plant life numbers
+    def nine_surrounding_list(self, target_index):
         dimension = self.board.shape[0]
         target_item = self.board.item(target_index)
         x = target_index[0]
@@ -57,8 +57,8 @@ class GameBoard(object):
     # this function averages the item at the target_index with the 8
     # surrounding items. assumes square matrices only, assumes one
     # end of the board connects to other
-    def eight_surrounding(self, target_index):
-        l_list = self.eight_surrounding_list(target_index)
+    def nine_surrounding(self, target_index):
+        l_list = self.nine_surrounding_list(target_index)
         return np.average(l_list)
 
     # this function evolves  the board
@@ -72,7 +72,7 @@ class GameBoard(object):
         blank_matrix = np.ones((dimension, dimension))
         for i in range(dimension):
             for j in range(dimension):
-                average = self.eight_surrounding((i, j))
+                average = self.nine_surrounding((i, j))
                 sig = self.sigmoid(average, growth_factor)
                 blank_matrix[i, j] = sig
         self.board = blank_matrix
