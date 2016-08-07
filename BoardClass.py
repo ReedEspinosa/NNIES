@@ -22,15 +22,17 @@ class GameBoard(object):
         rounded_matrix = np.rint(r_matrix_scaled)
         self.board = rounded_matrix
 
-    # this evolves a single input with a sigmoid.  scale input defaults to 1
-    # method is defined such that plants "grow" increasingly less as they get larger
-    def sigmoid(self, x_prime, scale1=1, scale2=1):
-        x = x_prime / scale1
-        num = 1 - x
-        den = np.sqrt(1 + (x - 1) ** 2)
-        frac = num / den
-        output = x + (scale2 * frac) + 1
-        return output
+    # this defines how plant life growths over the course of a turn
+    # the current formula is a scaled version of plank's BB radiation
+    # T=0.5 -> growth of ~0.1/turn, leveling off ~3
+    # T=2 -> growth of ~5/turn up, leveling off ~30
+    def sigmoid(self, xIn, temp=1):
+        if xIn == 0:
+            return 0
+        num = xIn**3
+        denom = np.exp(xIn/temp) - 1
+        growth = num/denom
+        return xIn + growth
 
     # make list of eight surrounding and center plant life numbers
     def nine_surrounding_list(self, target_index):
@@ -60,7 +62,7 @@ class GameBoard(object):
     # averaging the element with the 8 surround elements
     # and applying the above sigmoid to it to smooth and
     # group numbers
-    # larger growth_factor means less growth
+    # larger growth_factor means more growth (see above)
     def evolve_board(self, growth_factor=1, spread_rate=0.1):
         dimension = self.board.shape[0]
         blank_matrix = np.ones((dimension, dimension))

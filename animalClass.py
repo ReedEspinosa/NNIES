@@ -21,8 +21,6 @@ class Animal(object):
         netInput = np.append(surroundings, self.life)
         # need free will input
         options = self.brainNet.processInputs(netInput)
-        print("animal choice:")
-        print(options)
         decision = options.argmax(0)
         if decision == 9: # wants to reproduce
             deltaLives = 1

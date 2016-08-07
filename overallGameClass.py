@@ -10,7 +10,7 @@ class OverallGame(object):
 
         # create a board object
         self.land_map = GameBoard(board_size)
-        self.land_map.create_board(0.6)
+        self.land_map.create_board(0.8)
         self.board_size = board_size
 
         # create initial list of herbivores
@@ -29,9 +29,9 @@ class OverallGame(object):
         return self.land_map.nine_surrounding_list(position)
 
     # evolve the game one turn
-    def executeTurn(self):
+    def executeTurn(self, growth_factor=1, spread_rate=0.1):
         herb_i = 0
-        self.land_map.evolve_board(1)
+        self.land_map.evolve_board(growth_factor, spread_rate)
         while (herb_i < self.N_herbs):
             surroundings = self.surrounding_list(self.herb_list[herb_i])
             chng = self.herb_list[herb_i].act(surroundings, self.board_size)
@@ -42,13 +42,11 @@ class OverallGame(object):
                 self.herb_list.append(deepcopy(self.herb_list[herb_i]))
                 self.herb_list[self.N_herbs].brainNet.mutate(0.05)
                 self.N_herbs = self.N_herbs + 1
-                print("Birth!")
                 herb_i += 1
             elif chng == -1:
                 # kill this herb
                 self.herb_list.pop(herb_i)
                 self.N_herbs = self.N_herbs - 1
-                print("Death!")
             else:
                 herb_i += 1
                 
